@@ -76,16 +76,67 @@ export const getProfile = async (req: Request, res: Response) => {
     }
 }
 
-export const  updateProfile = async (req: Request, res: Response) => {
+export const updateProfile = async (req: Request, res: Response) => {
     try {
-        // let filePath: any;
-        // if (!req.file) {
-        //     filePath = `${req.file.path}`
-        // }
-        console.log(req.admin._id);
-        
-        let admin = await userservice.updateUser
+        let { firstName, lastName, email, profileImage } = req.body;
+
+        let filepath: any;
+        if (req.file) {
+            filepath = req.file.path;
+        }
+        let admin = await userservice.updateUser(
+            req.admin._id,
+            {
+                ...req.body,
+                profileImage: filepath,
+            }
+        );
+        res.status(200).json({ admin, message: `Profile Changed successfully` });
     } catch (error) {
-        
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const deleteProfile = async (req: Request, res: Response) => {
+    try {
+        let admin = await userservice.updateUser(
+            req.admin._id,
+            {
+                isDelete: true
+            }
+        )
+        res.status(200).json({admin, message: `Account Deleted Successfully.`})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Internal server error"});
     }
 }
+
+export const changePassword = async (req: Request, res: Response) => {
+    try {
+        let { password, newPassword, confirmPassword } = req.body;
+        
+        let checkPassword: Object = await bcryptjs.compare(password, req.admin.password);
+        
+        if (!checkPassword) {
+            return res.status(404).json({ message: 'Incorrect current Password' });
+        }
+        if (newPassword !== confirmPassword){
+            return res.json({ message: `New Password and Confirm Password Do not match!` })
+        }
+        let hashPassword = await bcryptjs.hash(confirmPassword, 10);
+        let admin = await userservice.updateUser(
+            req.admin._id,
+            {
+                password: hashPassword,
+                confirmPassword: hashPassword
+            }
+        )
+        res.status(200).json({admin, message: `Password updated successfully`});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+

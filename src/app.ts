@@ -3,11 +3,12 @@ const app = express();
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 dotenv.config();
+import admin from "./routes/admin/index.routes";
 const port : Number = Number(process.env.PORT);
 const dbURL: string = process.env.MONGO_DB_URL as string;
 
 app.use(express.json());
-
+app.use('/api/admin', admin)
 
 app.listen(port, async () => {
     mongoose.connect(dbURL)
