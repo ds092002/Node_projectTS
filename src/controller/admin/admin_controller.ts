@@ -24,15 +24,15 @@ export const registerAdmin = async (req: Request, res: Response) => {
         }
         const hashPassword = await bcryptjs.hash(confirmPassword, 8);
         
-        let filePath: any;
-        if (req.file) {
-            filePath = `${req.file.path}`;
-        }
+        // let filePath: any;
+        // if (req.file) {
+        //     filePath = `${req.file.path}`;
+        // }
         admin = await userservice.addNewUser({
             ...req.body,
             password: hashPassword,
             confirmPassword: hashPassword,
-            profileImage: filePath
+            // profileImage: filePath
         });
         admin.save();
         res.status(201).json({ message: `Admin Registered Successfully` });
@@ -80,15 +80,15 @@ export const updateProfile = async (req: Request, res: Response) => {
     try {
         let { firstName, lastName, email, profileImage } = req.body;
 
-        let filepath: any;
-        if (req.file) {
-            filepath = req.file.path;
-        }
+        // let filepath: any;
+        // if (req.file) {
+        //     filepath = req.file.path;
+        // }
         let admin = await userservice.updateUser(
             req.admin._id,
             {
                 ...req.body,
-                profileImage: filepath,
+                // profileImage: filepath,
             }
         );
         res.status(200).json({ admin, message: `Profile Changed successfully` });
