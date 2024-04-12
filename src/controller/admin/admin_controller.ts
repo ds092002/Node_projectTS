@@ -3,11 +3,12 @@ import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Userservice from '../../services/user_services';
 const  userservice = new Userservice();
+const key = process.env.SECRET_KEY;
 
 declare global {
     namespace Express {
         interface Request {
-            admin?: any;
+            admin?: object | any;
         }
     }
 }
@@ -15,7 +16,11 @@ declare global {
 export const registerAdmin = async (req: Request, res: Response) => {
     try {
         let { firstName, lastName, email, password,confirmPassword, gender, profileImage, mobileNo} = req.body;
-        let admin = await userservice.getUser({email: req.body.email, isDelete: false});
+        let admin : object | any= await userservice.getUser({
+            email: req.body.email, 
+            isDelete: false
+        });
+        console.log(admin);
         if (admin) {
             return res.json({message: "Email Alreday  Exists"}).status(409);
         }
@@ -30,11 +35,12 @@ export const registerAdmin = async (req: Request, res: Response) => {
         // }
         admin = await userservice.addNewUser({
             ...req.body,
+            isAdmin: true,
             password: hashPassword,
             confirmPassword: hashPassword,
             // profileImage: filePath
         });
-        admin.save();
+        // admin.save();
         res.status(201).json({ message: `Admin Registered Successfully` });
     } catch (error) {
         console.log(error);
@@ -45,22 +51,21 @@ export const registerAdmin = async (req: Request, res: Response) => {
 export const loginAdmin = async (req:Request, res:Response) => {
     try {
         const {email, password} = req.body;
-        let admin = await userservice.getUser({email: req.body.email, isDelete: false});
+        let admin = await userservice.getUser({
+            email: req.body.email, 
+            isDelete: false
+        });
+        console.log(admin);
         if (!admin) {
-            return res.json({ message: `Admin Does Not Exist.`});
+            return res.status(404).json({ message: `Admin Does Not Exist.`});
         }
         let checkPassword = await bcryptjs.compare(password, admin.password);
         if(!checkPassword){
-            return res.status(404).json({message:"Invalid Password"});
+            return res.status(401).json({message:"Invalid Password"});
         }
-        let playload = {
-            adminId: admin._id,
-        }
-        let secretKey: string | undefined = process.env.SECRET_KEY
-        if (playload && secretKey) {
-            let token = jwt.sign(playload, secretKey);
-            res.json({ token, message: `Login Successfully`})
-        }
+        let token : string = jwt.sign({ adminId: admin._id}, "Admin")
+        console.log(token);
+        res.status(200).json({ token, message: `Login SucccessFully......`})
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Internal server error"});
@@ -69,13 +74,30 @@ export const loginAdmin = async (req:Request, res:Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
-        res.json(req.admin);
+        let admin = await userservice.getUserById()
+        // res.json(req.admin);
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Internal server error"});
     }
 }
 
+export const getAllProfile = async (req: Request, res: Response) => {
+    try {
+        let admin = await userservice.getAllUser({
+            isAdmin : true,
+            isDelete: false
+        });
+        console.log(admin);
+        if (!admin) {
+            return res.status(404).json({ message:  `Admin Data Not Found..`})
+        }
+        res.status(200).json(admin);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: "Internal server error"});
+    }
+}
 export const updateProfile = async (req: Request, res: Response) => {
     try {
         let { firstName, lastName, email, profileImage } = req.body;
