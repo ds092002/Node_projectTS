@@ -1,8 +1,8 @@
 import express from 'express';
-import adminRoute from './admin.routes';
+import adminRoute from '../admin/admin.routes'
 
 const admin = express.Router();
 
-admin.use('/', adminRoute);
+admin.use('/user-admin', adminRoute);
 
 export default admin;

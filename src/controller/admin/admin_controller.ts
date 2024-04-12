@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import Userservice from '../../services/user_services';
+import Userservice from '../../services/user.service';
 const  userservice = new Userservice();
 const key = process.env.SECRET_KEY;
 
@@ -41,7 +41,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
             // profileImage: filePath
         });
         // admin.save();
-        res.status(201).json({ message: `Admin Registered Successfully` });
+        res.status(201).json({ admin,message: `Admin Registered Successfully` });
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Internal server error"});
@@ -63,7 +63,7 @@ export const loginAdmin = async (req:Request, res:Response) => {
         if(!checkPassword){
             return res.status(401).json({message:"Invalid Password"});
         }
-        let token : string = jwt.sign({ adminId: admin._id}, "Admin")
+        let token : string = jwt.sign({ adminId: admin._id}, "Dhaval")
         console.log(token);
         res.status(200).json({ token, message: `Login SucccessFully......`})
     } catch (error) {
@@ -74,8 +74,12 @@ export const loginAdmin = async (req:Request, res:Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.getUserById()
-        // res.json(req.admin);
+        let admin = await userservice.getUserById(req.query.adminId);
+        console.log(admin);
+        if (!admin) {
+            return res.status(404).json({ message : `Admin Not Found......`})
+        }    
+        res.status(200).json(admin);
     } catch (error) {
         console.log(error);
         res.status(500).json({message: "Internal server error"});
@@ -100,13 +104,11 @@ export const getAllProfile = async (req: Request, res: Response) => {
 }
 export const updateProfile = async (req: Request, res: Response) => {
     try {
-        let { firstName, lastName, email, profileImage } = req.body;
-
-        // let filepath: any;
-        // if (req.file) {
-        //     filepath = req.file.path;
-        // }
-        let admin = await userservice.updateUser(
+        let admin = await userservice.getUserById(req.query.adminId);
+        if (!admin) {
+            return res.status(404).json({ message: `Admin Not Found..`})
+        }
+        admin = await userservice.updateUser(
             req.admin._id,
             {
                 ...req.body,
@@ -122,7 +124,11 @@ export const updateProfile = async (req: Request, res: Response) => {
 
 export const deleteProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.updateUser(
+        let admin = await userservice.getUserById(req.query.adminId);
+        if(!admin) {
+            return res.status(404).json({message: `Admin Not Found..`})
+        }
+        admin = await userservice.updateUser(
             req.admin._id,
             {
                 isDelete: true
