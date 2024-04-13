@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import Userservice from '../../services/user.service';
-const  userservice = new Userservice();
+const  userService = new Userservice();
 const key = process.env.SECRET_KEY;
 
 declare global {
@@ -16,7 +16,7 @@ declare global {
 export const registerAdmin = async (req: Request, res: Response) => {
     try {
         let { firstName, lastName, email, password,confirmPassword, gender, profileImage, mobileNo} = req.body;
-        let admin : object | any= await userservice.getUser({
+        let admin : object | any= await userService.getUser({
             email: req.body.email, 
             isDelete: false
         });
@@ -33,7 +33,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
         // if (req.file) {
         //     filePath = `${req.file.path}`;
         // }
-        admin = await userservice.addNewUser({
+        admin = await userService.addNewUser({
             ...req.body,
             isAdmin: true,
             password: hashPassword,
@@ -51,7 +51,7 @@ export const registerAdmin = async (req: Request, res: Response) => {
 export const loginAdmin = async (req:Request, res:Response) => {
     try {
         const {email, password} = req.body;
-        let admin = await userservice.getUser({
+        let admin = await userService.getUser({
             email: req.body.email, 
             isDelete: false
         });
@@ -63,7 +63,7 @@ export const loginAdmin = async (req:Request, res:Response) => {
         if(!checkPassword){
             return res.status(401).json({message:"Invalid Password"});
         }
-        let token : string = jwt.sign({ adminId: admin._id}, "Dhaval")
+        let token : string = jwt.sign({ adminId: admin._id}, "dhaval")
         console.log(token);
         res.status(200).json({ token, message: `Login SucccessFully......`})
     } catch (error) {
@@ -74,7 +74,7 @@ export const loginAdmin = async (req:Request, res:Response) => {
 
 export const getProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.getUserById(req.query.adminId);
+        let admin = await userService.getUserById(req.query.adminId);
         console.log(admin);
         if (!admin) {
             return res.status(404).json({ message : `Admin Not Found......`})
@@ -88,7 +88,7 @@ export const getProfile = async (req: Request, res: Response) => {
 
 export const getAllProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.getAllUser({
+        let admin = await userService.getAllUser({
             isAdmin : true,
             isDelete: false
         });
@@ -104,11 +104,11 @@ export const getAllProfile = async (req: Request, res: Response) => {
 }
 export const updateProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.getUserById(req.query.adminId);
+        let admin = await userService.getUserById(req.query.adminId);
         if (!admin) {
             return res.status(404).json({ message: `Admin Not Found..`})
         }
-        admin = await userservice.updateUser(
+        admin = await userService.updateUser(
             req.admin._id,
             {
                 ...req.body,
@@ -124,11 +124,11 @@ export const updateProfile = async (req: Request, res: Response) => {
 
 export const deleteProfile = async (req: Request, res: Response) => {
     try {
-        let admin = await userservice.getUserById(req.query.adminId);
+        let admin = await userService.getUserById(req.query.adminId);
         if(!admin) {
             return res.status(404).json({message: `Admin Not Found..`})
         }
-        admin = await userservice.updateUser(
+        admin = await userService.updateUser(
             req.admin._id,
             {
                 isDelete: true
@@ -154,7 +154,7 @@ export const changePassword = async (req: Request, res: Response) => {
             return res.json({ message: `New Password and Confirm Password Do not match!` })
         }
         let hashPassword = await bcryptjs.hash(confirmPassword, 10);
-        let admin = await userservice.updateUser(
+        let admin = await userService.updateUser(
             req.admin._id,
             {
                 password: hashPassword,
