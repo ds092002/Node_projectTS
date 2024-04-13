@@ -63,7 +63,7 @@ export const loginAdmin = async (req:Request, res:Response) => {
         if(!checkPassword){
             return res.status(401).json({message:"Invalid Password"});
         }
-        let token : string = jwt.sign({ adminId: admin._id}, "dhaval")
+        let token : string = jwt.sign({ adminId: admin._id}, "admin")
         console.log(token);
         res.status(200).json({ token, message: `Login SucccessFully......`})
     } catch (error) {
