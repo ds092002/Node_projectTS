@@ -8,13 +8,13 @@ import {
     deleteProfile,
     changePassword
 } from "../../controller/admin/admin_controller"
-const adminRouter = express.Router();
+const adminRoutes = express.Router();
 
-adminRouter.post("/register-admin", registerAdmin);
-adminRouter.post("/login-admin", loginAdmin);
-adminRouter.get("/get-profile", adminToken, getProfile);
-adminRouter.put("/update-profile", adminToken, updateProfile);
-adminRouter.delete("/delete-profile", adminToken, deleteProfile);
-adminRouter.put("/change-password", adminToken, changePassword);
+adminRoutes.post("/register-admin", registerAdmin);
+adminRoutes.post("/login-admin", loginAdmin);
+adminRoutes.get("/get-profile", adminToken, getProfile);
+adminRoutes.put("/update-profile", adminToken, updateProfile);
+adminRoutes.delete("/delete-profile", adminToken, deleteProfile);
+adminRoutes.put("/change-password", adminToken, changePassword);
 
-export default adminRouter
+export default adminRoutes

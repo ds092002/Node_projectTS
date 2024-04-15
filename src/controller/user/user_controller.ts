@@ -7,10 +7,11 @@ import { log } from "console";
 
 const userService = new Userservice();
 
+
 declare global {
     namespace Express {
         interface Request {
-            user?: object;
+            user?: object | any;
         }
     }
 }
@@ -109,23 +110,50 @@ export const deleteProfile = async (req: Request, res: Response) => {
 // Update Password
 export const changePassword = async (req: Request, res: Response) => {
     try {
-        let user;
+        // Retrieve the password, new password, and confirm password from the request body
         let { password, newPassword, confirmPassword } = req.body;
-        let checkPassword: Object = await bcryptjs.compare(password, req.admin.password);
-        if (!checkPassword) {
-            return res.status(404).json({ message: `Incorrect Current Password..`});
+
+        // Retrieve the user object from the user service using the user's ID
+        let user: any = await userService.getUserById(req.user._id);
+
+        // Check if the user exists
+        if (!user) {
+            return res.json({ message: 'User Not Found. Please Try Again.' });
         }
-        if (newPassword !== confirmPassword) {
-            return res.json({ message: `New Password And Confirm Password Do not Match......`});
+
+        // Compare the current password with the password stored in the user object
+        let comparePassword: boolean = await bcryptjs.compare(
+            req.body.oldPassword, 
+            user.password
+        );
+
+        // Check if the current password is incorrect
+        if (!comparePassword) {
+            return res.status(404).json({ message: 'Incorrect Current Password.' });
         }
-        let hashPassword = await bcryptjs.hash(confirmPassword, 10);
-        user = await userService.updateUser(user._id , {password: hashPassword})
-        res.status(200).json({ user: user, message: `Password Update SuccesFully....`})
+
+        // Check if the new password is the same as the old password
+        if (req.body.newPassword === req.body.oldPassword) {
+            return res.json({ message: 'Old Password And New Password Are Same. Please Enter a Different Password.' });
+        }
+
+        // Check if the new password and confirm password match
+        if (req.body.newPassword !== req.body.confirmPassword) {
+            return res.json({ message: 'New Password And Confirm Password Do Not Match.' });
+        }
+
+        // Hash the new password
+        let hashPassword = await bcryptjs.hash(req.body.newPassword, 10);
+
+        // Update the user's password in the user service
+        user = await userService.updateUser(user._id, { password: hashPassword });
+
+        // Return the updated user object and a success message
+        res.status(200).json({ user, message: 'Password Update Successful.' });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: `Internal Server Error..${console.error()}` });
+        res.status(500).json({ message: 'Internal Server Error.' });
     }
 }
-
 
 
