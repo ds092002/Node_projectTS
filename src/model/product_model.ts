@@ -5,7 +5,7 @@ interface IProduct extends Document {
     description: string;
     price: number;
     category: string[];
-    isDelete: boolean;
+    isDelete: Boolean
 }
 
 const productSchema: Schema = new Schema<IProduct>({
