@@ -1,0 +1,1 @@
+import orderModel from '../../src/model/'
