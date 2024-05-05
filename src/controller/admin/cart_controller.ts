@@ -6,10 +6,10 @@ const cartServices = new CartServices();
 declare global {
     namespace Express {
         interface Request {
-            user?: any
+            admin?: any;
         }
         interface Response {
-            user?: object | undefined;
+            admin?: object | undefined;
         }
     }
 }

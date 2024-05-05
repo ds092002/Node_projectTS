@@ -1,13 +1,8 @@
 import Cart from '../../src/model/cart_model';
 import { ObjectId} from 'mongoose';
+import { deleteCart } from '../controller/user/cart_controller';
 
 export default class CartServices {
-    static getCart: any;
-    static addToCart: any;
-    static getAllCarts: any;
-    static getCartById: any;
-    static updateCart: any;
-    static deleteCart: any;
     
     // add to cart
     async addToCart(body: any) {
@@ -58,6 +53,16 @@ export default class CartServices {
             return error.message;
         }
     };
+
+  // Delete Cart
+  async deleteCart(id: string, body: any) {
+    try {
+      return await Cart.findByIdAndDelete(id, { isDelete: true});
+    } catch (error) {
+      console.log(error);
+      return error.message;
+    }
+  }
 
     // Get All Carts
     async getAllCarts( query: any, user: any) {

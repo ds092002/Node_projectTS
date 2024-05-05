@@ -76,7 +76,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
         if (!product) {
             return res.status(404).json({ message: 'Product is not found' });
         }
-        product = await productService.updateProduct(product._id, { isDelete: true });
+        product = await productService.deleteProduct(product._id, { isDelete: true });
         res.status(200).json({ product, message: 'Product is Deleted' });
     } catch (error) {
         console.log(error);

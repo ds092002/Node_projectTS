@@ -1,4 +1,4 @@
-import productModel from "../model/product_model";
+import productModel from "../../src/model/product_model";
 
 export default class productSevice{
     // add product
@@ -20,5 +20,9 @@ export default class productSevice{
     // update product
     updateProduct = async (body: any, id: string) => {
         return await productModel.findByIdAndUpdate(id, { $set: body}, { new: true});
+    }
+    // delete product
+    deleteProduct = async (id: string, body: any) => {
+        return await productModel.findByIdAndDelete(id, { new: true});
     }
 }

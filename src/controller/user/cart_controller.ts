@@ -80,15 +80,21 @@ export const updateCart = async (req: Request, res: Response) => {
 
 // Delete Cart
 export const deleteCart = async (req: Request, res: Response) => {
-    try {
-        let cart = await cartServices.getCart({_id: req.query.cartId});
-        if(!cart){
-            return res.status(404).json({ message: `No Cart Found With this ID...`});
-        }
-        cart = await cartServices.updateCart(cart._id, { isDelete: true});
-        res.status(200).json({ cart, message: `Cart Item Delete SuccessFully....`});
-    } catch (error) {
-        console.log(error);
-        res.status(401).json({ message: `Internal Server Error... ${console.error()}`});
+  try {
+    let cart = await cartServices.getCart({ _id: req.query.cartId });
+    if (!cart) {
+      return res
+        .status(404)
+        .json({ message: `No Cart Found With this ID...` });
     }
-}
+    cart = await cartServices.deleteCart(cart._id, {new: true});
+    res
+      .status(200)
+      .json({ cart, message: `Cart Item Delete SuccessFully....` });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(401)
+      .json({ message: `Internal Server Error... ${console.error()}` });
+  }
+};
