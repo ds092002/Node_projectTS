@@ -23,11 +23,11 @@ export default class OrderServices {
 
     // Update Order
     updateOrder = async (body: any, id: string) => {
-        return await orderModel.findByIdAndUpdate(id, {$set: body}, { new: true});3
+        return await orderModel.findByIdAndUpdate(id, {$set: body}, { new: true});
     }
     
     // Delete Order
-    deleteOrder = async (id: string) => {
+    deleteOrder = async (id: string, body: any) => {
         return await orderModel.findByIdAndDelete(id, {new: true}, { isDelete: true});
     }
 

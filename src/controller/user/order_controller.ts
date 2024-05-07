@@ -44,3 +44,49 @@ export const addNewOrder = async (req: Request, res: Response) => {
         return res.status(500).json({ message: `Internal Server Error ${error.message}` });
     }
 };
+
+// Get All Order
+export const getAllOrders = async ( req: Request, res: Response) => {
+    try {
+        let orders = await orderServices.getAllOrder({ isDelete: false});
+        console.log(orders);
+        if (!orders) {
+            res.status(404).json({ message: `Orders Not Found....`});
+        }
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: `Internal Server Error ${error.message}` });        
+    }
+};
+
+// Get Order By Id
+export const getOrder = async ( req: Request, res: Response) => {
+    try {
+        let order = await orderServices.getOrderById({_id: req.query.orderId, isDelete: false});
+        console.log(order);
+        if (!order) {
+            return res.status(404).json({ message: `Order Not Found....`})
+        }
+        res.status(200).json(order)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: `Internal Server Error ${error.message}` });
+    }
+};
+
+// Delete Order
+export const deleteOrder = async ( req: Request, res: Response) => {
+    try {
+        let order = await orderServices.getOrder({_id: req.query.orderId, isDelete: false});
+        console.log(order);
+        if (!order) {
+            res.status(404).json({ message: `Order Not Found....`})
+        }
+        order = await orderServices.deleteOrder(order._id, {new : true});
+        res.status(200).json({ message: `Your Order Deleted Succesfully.....`});
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: `Internal Server Error ${error.message}` });
+    }
+};
