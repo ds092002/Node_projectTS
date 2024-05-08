@@ -48,7 +48,7 @@ export default class FavoriteServices {
     // Update Favorite
     async updateFavorite(id: string, body: any) {
         try {
-            return await FavoriteModel.findByIdAndUpdate(id, {$set: body,new: true});
+            return await FavoriteModel.findByIdAndUpdate(id, {$set: body},{new: true});
         } catch (error) {
             console.log(error);
             return error.message;
