@@ -15,3 +15,17 @@ export const getAllReview = async (req: Request, res: Response) => {
         res.status(500).json({ message: `Internal Server Error...${console.error()}`});        
     }
 };
+
+export const deleteReview = async ( req: Request, res: Response) => {
+    try {
+        let review = await reviewService.getReviewById(req.query.reviewId);
+        if (!review) {
+            return res.status(404).json({ message: `This Review Does Not Exists!....`});
+        }
+        review = await reviewService.deleteReview(review._id);
+        res.status(200).json({ message: `The Product review has been deleted successfully.....`})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: `Internal Server Error....${console.error()}`});
+    }
+};
