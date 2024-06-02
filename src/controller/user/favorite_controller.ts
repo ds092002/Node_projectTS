@@ -29,7 +29,7 @@ export const addToFavorite = async ( req: Request, res: Response) =>{
             user: (req.user as any)._id,
         });
         return res.status(201).json({ favorite, message: `Product added to your favorite list succesfully.`});
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
         res.status(401).json({ message: `Internal Server Error... ${console.error()}`});
     }
@@ -40,7 +40,7 @@ export const getAllFavorite = async ( req: Request, res: Response) => {
     try {
         let favorite = await favoriteService.getAllFavorite(req.query);
         res.status(200).json(favorite);
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
         res.status(401).json({ message: `Internal Server Error... ${console.error()}`});
     }
@@ -56,7 +56,7 @@ export const deleteFavorite = async ( req: Request, res: Response) => {
         console.log(favorite);
         favorite = await favoriteService.updateFavorite(favorite._id,{isDelete: true});
         res.status(201).json({favorite, message: `Favorite Item Is Deleted SuccessFully...`});
-    } catch (error) {
+    } catch (error: any) {
         console.log(error);
         res.status(401).json({ message: `Internal Server Error... ${console.error()}`});
     }

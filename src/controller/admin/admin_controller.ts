@@ -129,7 +129,7 @@ export const deleteProfile = async (req: Request, res: Response) => {
             return res.status(404).json({message: `Admin Not Found..`})
         }
         admin = await userService.updateUser(
-            req.admin._id,
+            admin._id,
             {
                 isDelete: true
             }

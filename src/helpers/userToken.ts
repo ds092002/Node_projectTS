@@ -23,10 +23,10 @@ export const userToken = async (req: Request, res: Response, next: NextFunction)
             return res.status(401).json({ message: `Unauthorized ${console.error()}`});
         }else{
             const payLoad: any = jwt.verify(token, 'user');
-            console.log(payLoad.userId);
+            // console.log(payLoad.userId);
             const userId = payLoad.userId;
             const user = await userModel.findById(userId);
-            console.log(user);
+            // console.log(user);
             if (user) {
                 req.user = user;
                 next();

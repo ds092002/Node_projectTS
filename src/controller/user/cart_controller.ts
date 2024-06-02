@@ -87,7 +87,7 @@ export const deleteCart = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: `No Cart Found With this ID...` });
     }
-    cart = await cartServices.deleteCart(cart._id, {new: true});
+    cart = await cartServices.deleteCart(String(cart._id), {new: true});
     res
       .status(200)
       .json({ cart, message: `Cart Item Delete SuccessFully....` });

@@ -5,7 +5,7 @@ export default class FavoriteServices {
     async addToFavorite(body: any) {
         try {
             return await FavoriteModel.create(body);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -19,7 +19,7 @@ export default class FavoriteServices {
             ];
             let result = await FavoriteModel.aggregate(find);
             return result;
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -29,7 +29,7 @@ export default class FavoriteServices {
     async getFavorite(body: any) {
         try {
             return await FavoriteModel.findOne(body);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -39,7 +39,7 @@ export default class FavoriteServices {
     async getFavoriteById(id: string) {
         try {
             return await FavoriteModel.findById(id);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -49,7 +49,7 @@ export default class FavoriteServices {
     async updateFavorite(id: string, body: any) {
         try {
             return await FavoriteModel.findByIdAndUpdate(id, {$set: body},{new: true});
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }

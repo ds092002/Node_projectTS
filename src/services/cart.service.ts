@@ -8,7 +8,7 @@ export default class CartServices {
     async addToCart(body: any) {
         try {
             return await Cart.create(body);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -18,7 +18,7 @@ export default class CartServices {
     async getCart(body: any) {
         try {
             return await Cart.findOne(body);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -28,7 +28,7 @@ export default class CartServices {
     async getCartById(id: any) {
         try {
             return await Cart.findById(id);
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -38,7 +38,7 @@ export default class CartServices {
     async updateCart(body: any, id: string) {
         try {
             return await Cart.findByIdAndUpdate(id, { $set: body}, {new: true});
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -48,7 +48,7 @@ export default class CartServices {
     async updateMany(user: any, body: any) {
         try {
             return await Cart.updateMany({ user: user} ,{ $set: body}, {new: true})
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
             return error.message;
         }
@@ -58,7 +58,7 @@ export default class CartServices {
   async deleteCart(id: string, body: any) {
     try {
       return await Cart.findByIdAndDelete(id, { isDelete: true});
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       return error.message;
     }

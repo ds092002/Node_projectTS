@@ -54,7 +54,7 @@ export const getAllOrders = async ( req: Request, res: Response) => {
             res.status(404).json({ message: `Orders Not Found....`});
         }
         res.status(200).json(orders);
-    } catch (error) {
+    } catch (error: any) {
         console.error(error);
         return res.status(500).json({ message: `Internal Server Error ${error.message}` });        
     }
@@ -69,7 +69,7 @@ export const getOrder = async ( req: Request, res: Response) => {
             return res.status(404).json({ message: `Order Not Found....`})
         }
         res.status(200).json(order)
-    } catch (error) {
+    } catch (error: any) {
         console.error(error);
         return res.status(500).json({ message: `Internal Server Error ${error.message}` });
     }
@@ -85,7 +85,7 @@ export const deleteOrder = async ( req: Request, res: Response) => {
         }
         order = await orderServices.deleteOrder(order._id, {new : true});
         res.status(200).json({ message: `Your Order Deleted Succesfully.....`});
-    } catch (error) {
+    } catch (error: any) {
         console.error(error);
         return res.status(500).json({ message: `Internal Server Error ${error.message}` });
     }

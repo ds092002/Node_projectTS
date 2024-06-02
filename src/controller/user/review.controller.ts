@@ -5,7 +5,7 @@ const reviewService = new ReviewServices();
 declare global {
     namespace Express {
         interface Request {
-            user?: object
+            user?: any
         }
     }
 }
