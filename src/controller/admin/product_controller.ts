@@ -55,28 +55,28 @@ export const getProduct = async ( req: Request, res: Response) => {
 }
 
 // Update Product
-export const updateProduct = async ( req: Request, res: Response) => {
+export const updateProduct = async (req: Request, res: Response) => {
     try {
         let product = await productService.getProductById(req.query.productID);
         if (!product) {
-            return res.status(404).json({ message: `This Product is not found...`});
+            return res.status(404).json({ message: 'Product is not found' });
         }
         product = await productService.updateProduct(product._id, { ...req.body });
-        res.status(202).json({ product, message: `Product Updated succesfully....`});
+        res.status(202).json({ product, message: 'Product is updated' });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
-}
+};
 
 // DELETE PRODUCT
 export const deleteProduct = async (req: Request, res: Response) => {
     try {
-        let product = await productService.getProductById(req.query.productId);
+        let product = await productService.getProductById(req.query.productID);
         if (!product) {
             return res.status(404).json({ message: 'Product is not found' });
         }
-        product = await productService.deleteProduct(product._id, { isDelete: true });
+        product = await productService.updateProduct(product._id, { isDelete: true });
         res.status(200).json({ product, message: 'Product is Deleted' });
     } catch (error) {
         console.log(error);

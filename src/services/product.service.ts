@@ -18,11 +18,7 @@ export default class productSevice{
         return await productModel.findOne(body);
     }
     // update product
-    updateProduct = async (body: any, id: string) => {
-        return await productModel.findByIdAndUpdate(id, { $set: body}, { new: true});
-    }
-    // delete product
-    deleteProduct = async (id: string, body: any) => {
-        return await productModel.findByIdAndDelete(id, { new: true});
+    updateProduct = async (id:string , body:any) => {
+        return await productModel.findByIdAndUpdate(id, {$set: body}, {new: true});
     }
 }
